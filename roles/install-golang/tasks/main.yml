@@ -29,8 +29,16 @@
 - name: Set golang env vars
   set_fact:
     golang_env:
-      GOPATH: '{{ ansible_user_dir }}'
-      PATH: '/usr/local/go/bin:{{ ansible_user_dir }}/bin:{{ ansible_env.PATH }}'
+      GOPATH: '{{ ansible_user_dir }}/go'
+      PATH: '/usr/local/go/bin:{{ ansible_user_dir }}/go/bin:{{ ansible_env.PATH }}'
+
+- name: Set golang env to profile
+  copy:
+    dest: /etc/profile.d/go.sh
+    content: |
+      export GOROOT=/usr/local/go
+      export GOPATH={{ ansible_user_dir }}/go
+      export PATH=$PATH:$GOROOT/bin:$GOPATH/bin/
 
 - name: Merge golang env vars into global env
   set_fact:
